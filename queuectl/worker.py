@@ -88,15 +88,21 @@ class Worker:
                 text=True
             )
 
-            try:
-                stdout_data, stderr_data = self.current_process.communicate(timeout=job.timeout)
-                exit_code = self.current_process.returncode
-            except subprocess.TimeoutExpired:
-                self.current_process.kill()
-                stdout_data, stderr_data = self.current_process.communicate()
-                exit_code = -1
-                timed_out = True
-                stderr_data = (stderr_data or "") + f"\nJob timed out after {job.timeout} seconds."
+            stdout_data, stderr_data = self.current_process.communicate(timeout=job.timeout)
+            exit_code = self.current_process.returncode
+
+            print("=" * 50)
+            print("Command:", repr(job.command))
+            print("Exit Code:", exit_code)
+            print("STDOUT:", repr(stdout_data))
+            print("STDERR:", repr(stderr_data))
+            print("=" * 50)
+        except subprocess.TimeoutExpired:
+            self.current_process.kill()
+            stdout_data, stderr_data = self.current_process.communicate()
+            exit_code = -1
+            timed_out = True
+            stderr_data = (stderr_data or "") + f"\nJob timed out after {job.timeout} seconds."
         except Exception as e:
             exit_code = -1
             stderr_data = f"Failed to execute command: {str(e)}"
