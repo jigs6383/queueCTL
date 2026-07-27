@@ -154,8 +154,3 @@ Workers poll pending jobs, lock them, execute commands, retry failures using exp
 
 ---
 
-## Demo
-
-Google Drive Link
-
-https://drive.google.com/your-demo-link
